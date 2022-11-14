@@ -50,6 +50,9 @@ services:
       - UDS_PROXY_HOST_prowlarr=localhost:9696
     volumes:
       - comm-volume-prowlarr:/comm
+    network_mode: container:vpn-tunnel
+    depends_on:
+      - container:vpn-tunnel
   
   rtorrent:
     build: https://github.com/master-hax/docker-rtorrent-rutorrent.git#master-hax-patch-1
@@ -69,6 +72,9 @@ services:
       nofile:
         soft: 32000
         hard: 40000
+    network_mode: container:vpn-tunnel
+    depends_on:
+      - container:vpn-tunnel
 
   web-proxy:
     image: nginx:stable
