@@ -1,0 +1,119 @@
+version: "3.7"
+services:
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    restart: unless-stopped
+    volumes:
+      - comm-volume-radarr:/comm
+      - media-volume:/media
+    environment:
+      - TZ=America/Los_Angeles
+      - PUID=1005
+      - PGID=4321
+      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
+      - UDS_PROXY_HOST_radarr=localhost:7878
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    restart: unless-stopped
+    volumes:
+      - comm-volume-lidarr:/comm
+      - media-volume:/media
+    environment:
+      - TZ=America/Los_Angeles
+      - PUID=1004
+      - PGID=4321
+      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
+      - UDS_PROXY_HOST_lidarr=localhost:8686
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    restart: unless-stopped
+    volumes:
+      - comm-volume-sonarr:/comm
+      - media-volume:/media
+    environment:
+      - TZ=America/Los_Angeles
+      - PUID=1003
+      - PGID=4321
+      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
+      - UDS_PROXY_HOST_sonarr=localhost:8989
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+      - PUID=1002
+      - PGID=4321
+      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
+      - UDS_PROXY_HOST_prowlarr=localhost:9696
+    volumes:
+      - comm-volume-prowlarr:/comm
+  
+  rtorrent:
+    build: https://github.com/master-hax/docker-rtorrent-rutorrent.git#master-hax-patch-1
+    tmpfs:
+      - /data
+      - /downloads
+    volumes:
+     - comm-volume-rtorrent:/comm
+     - media-volume:/media
+    restart: unless-stopped
+    environment:
+     - TZ=America/Los_Angeles
+     - PUID=1001
+     - PGID=4321
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+
+  web-proxy:
+    image: nginx:stable
+    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+    ports:
+      - 80:80
+    read_only: true
+    tmpfs:
+      - /var/run
+      - /var/cache/nginx
+    volumes:
+      - $PWD/web-proxy.conf:/etc/nginx/nginx.conf:ro
+      - comm-volume-rtorrent:/comm/rtorrent
+      - comm-volume-prowlarr:/comm/prowlarr
+      - comm-volume-sonarr:/comm/sonarr
+      - comm-volume-lidarr:/comm/lidarr
+      - comm-volume-radarr:/comm/radarr
+
+volumes:
+  comm-volume-prowlarr:
+    driver_opts:
+        type: tmpfs
+        device: tmpfs
+  comm-volume-rtorrent:
+    driver_opts:
+        type: tmpfs
+        device: tmpfs
+  comm-volume-sonarr:
+    driver_opts:
+        type: tmpfs
+        device: tmpfs
+  comm-volume-lidarr:
+    driver_opts:
+        type: tmpfs
+        device: tmpfs
+  comm-volume-radarr:
+    driver_opts:
+        type: tmpfs
+        device: tmpfs
+  media-volume: # (optional) media & downloads location - change to a persistent location
+    driver_opts:
+        type: tmpfs
+        device: tmpfs
+
+networks:
+  default:
