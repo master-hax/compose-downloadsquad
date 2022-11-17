@@ -8,7 +8,7 @@ features:
 
 ## how to set it up
 1. clone this repo
-1. put your wg0.conf file into ./wireguard (or use a different tunnel entirely)
+1. put your wg0.conf file into ./wireguard (or use a different tunnel entirely. works with [qdm12/gluetun](https://github.com/qdm12/gluetun), [dperson/openvpn-client](https://github.com/dperson/openvpn-client), etc.)
 1. run docker-compose up
 
 ## how to use it
