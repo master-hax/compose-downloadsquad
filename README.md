@@ -17,3 +17,6 @@ add the following to your hosts file to access the web UI easily (using the IP a
 note:
 * rtorrent & prowlarr are visble to containers outside the VPN as "aggregator-proxy"
 * containers outside the VPN are visible to rtorrent & prowlarr as "localhost"
+
+## how it works
+we only want to pass `rtorrent` & `prowlarr` through the VPN, but they still need to communicate with containers outside the VPN. So we use [unix domain sockets](https://en.wikipedia.org/wiki/Unix_domain_socket) for secure & efficient communication around the VPN.
