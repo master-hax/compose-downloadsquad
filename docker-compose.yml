@@ -1,125 +1,169 @@
 version: "3.7"
 services:
 
+
+  vpn-tunnel:
+    image: lscr.io/linuxserver/wireguard
+    container_name: tunnel-mango
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    volumes:
+      - /lib/modules:/lib/modules
+      - wgclient-data-volume:/config
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv6.conf.all.disable_ipv6=0 # for raspberry pi compatibility?
+
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     restart: unless-stopped
     volumes:
-      - comm-volume-radarr:/comm
-      - media-volume:/media
+      - sharebear-volume:/media
+      - radarr-data-volume:/config
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1005
+      - PUID=1020
       - PGID=4321
-      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
-      - UDS_PROXY_HOST_radarr=localhost:7878
+
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
     restart: unless-stopped
     volumes:
-      - comm-volume-lidarr:/comm
-      - media-volume:/media
+      - sharebear-volume:/media
+      - lidarr-data-volume:/config
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1004
+      - PUID=1021
       - PGID=4321
-      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
-      - UDS_PROXY_HOST_lidarr=localhost:8686
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     restart: unless-stopped
     volumes:
-      - comm-volume-sonarr:/comm
-      - media-volume:/media
+      - sharebear-volume:/media
+      - sonarr-data-volume:/config
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1003
+      - PUID=1022
       - PGID=4321
-      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
-      - UDS_PROXY_HOST_sonarr=localhost:8989
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    restart: unless-stopped
+    volumes:
+      - sharebear-volume:/media
+      - readarr-data-volume:/config
+    environment:
+      - TZ=America/Los_Angeles
+      - PUID=1023
+      - PGID=4321
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
     restart: unless-stopped
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1002
+      - PUID=1024
       - PGID=4321
-      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
-      - UDS_PROXY_HOST_prowlarr=localhost:9696
+    network_mode: container:tunnel-mango
     volumes:
-      - comm-volume-prowlarr:/comm
-    network_mode: container:vpn-tunnel
+      - prowlarr-data-volume:/config
     depends_on:
-      - container:vpn-tunnel
+      - container:tunnel-mango
   
   rtorrent:
-    build: https://github.com/master-hax/docker-rtorrent-rutorrent.git#master-hax-patch-1
-    tmpfs:
-      - /data
-      - /downloads
+    image: crazymax/rtorrent-rutorrent:latest
     volumes:
-     - comm-volume-rtorrent:/comm
-     - media-volume:/media
+     - sharebear-volume:/media
+     - rtorrent-data-volume:/data
     restart: unless-stopped
     environment:
      - TZ=America/Los_Angeles
-     - PUID=1001
+     - PUID=1025
      - PGID=4321
     ulimits:
       nproc: 65535
       nofile:
         soft: 32000
         hard: 40000
-    network_mode: container:vpn-tunnel
+    network_mode: container:tunnel-mango
     depends_on:
-      - container:vpn-tunnel
+      - container:tunnel-mango
 
-  web-proxy:
+  vpn-proxy:
     image: nginx:stable
     restart: unless-stopped
     environment:
       - TZ=America/Los_Angeles
-    ports:
-      - 80:80
+      - PUID=1025
+      - PGID=4321
     read_only: true
     tmpfs:
       - /var/run
       - /var/cache/nginx
     volumes:
-      - $PWD/web-proxy.conf:/etc/nginx/nginx.conf:ro
-      - comm-volume-rtorrent:/comm/rtorrent
-      - comm-volume-prowlarr:/comm/prowlarr
-      - comm-volume-sonarr:/comm/sonarr
-      - comm-volume-lidarr:/comm/lidarr
-      - comm-volume-radarr:/comm/radarr
+      - $PWD/internal-proxy.conf:/etc/nginx/conf.d/internal-proxy.conf:ro # can't define a single file below
+      - comm-volume:/comm
+    network_mode: container:tunnel-mango
+    depends_on:
+      - container:tunnel-mango
+
+  aggregator-proxy:
+    image: nginx:stable
+    restart: unless-stopped
+    environment:
+      TZ: America/Los_Angeles
+    read_only: true
+    ports:
+      - 80:80/tcp
+    tmpfs:
+      - /var/run
+      - /var/cache/nginx
+    volumes:
+      - $PWD/external-proxy.conf:/etc/nginx/conf.d/external-proxy.conf:ro
+      - comm-volume:/comm
 
 volumes:
-  comm-volume-prowlarr:
+  comm-volume: # leave this as tmpfs in RAM - it is for container to container communication
     driver_opts:
         type: tmpfs
         device: tmpfs
-  comm-volume-rtorrent:
+  sharebear-volume: # this is the downloads & media volume - change this to a persistent volume
+    # external: true # setting up this volume manually outside of docker-compose is recommended
     driver_opts:
         type: tmpfs
         device: tmpfs
-  comm-volume-sonarr:
+  rtorrent-data-volume: # this is data for rtorrent - change this to a persistent volume
     driver_opts:
         type: tmpfs
         device: tmpfs
-  comm-volume-lidarr:
+  prowlarr-data-volume: # this is data for prowlarr - change this to a persistent volume
     driver_opts:
         type: tmpfs
         device: tmpfs
-  comm-volume-radarr:
+  radarr-data-volume: # this is data for radarr - change this to a persistent volume
     driver_opts:
         type: tmpfs
         device: tmpfs
-  media-volume: # (optional) media & downloads location - change to a persistent location
+  lidarr-data-volume: # this is data for lidarr - change this to a persistent volume
     driver_opts:
         type: tmpfs
         device: tmpfs
-
+  sonarr-data-volume: # this is data for sonarr - change this to a persistent volume
+    driver_opts:
+        type: tmpfs
+        device: tmpfs
+  readarr-data-volume: # this is data for readarr - change this to a persistent volume
+    driver_opts:
+        type: tmpfs
+        device: tmpfs
+  wireguard-data-volume: # writeable location of wg0.conf - remove this if you are not using wireguard 
+    driver: local
+    driver_opts:
+        o: bind
+        type: none
+        device: "$PWD/wireguard/"
 networks:
   default:
