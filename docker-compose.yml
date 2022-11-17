@@ -1,7 +1,6 @@
 version: "3.7"
 services:
 
-
   vpn-tunnel:
     image: lscr.io/linuxserver/wireguard
     container_name: tunnel-mango
@@ -22,10 +21,13 @@ services:
     volumes:
       - sharebear-volume:/media
       - radarr-data-volume:/config
+      - comm-volume:/comm
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1020
+      - PUID=2001
       - PGID=4321
+      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
+      - UDS_PROXY_HOST_radarr=localhost:7878
 
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
@@ -33,10 +35,13 @@ services:
     volumes:
       - sharebear-volume:/media
       - lidarr-data-volume:/config
+      - comm-volume:/comm
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1021
+      - PUID=2002
       - PGID=4321
+      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
+      - UDS_PROXY_HOST_lidarr=localhost:8686
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -44,10 +49,13 @@ services:
     volumes:
       - sharebear-volume:/media
       - sonarr-data-volume:/config
+      - comm-volume:/comm
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1022
+      - PUID=2003
       - PGID=4321
+      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
+      - UDS_PROXY_HOST_sonarr=localhost:8989
 
   readarr:
     image: lscr.io/linuxserver/readarr:develop
@@ -55,17 +63,20 @@ services:
     volumes:
       - sharebear-volume:/media
       - readarr-data-volume:/config
+      - comm-volume:/comm
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1023
+      - PUID=2004
       - PGID=4321
+      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
+      - UDS_PROXY_HOST_readarrr=localhost:8787
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
     restart: unless-stopped
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1024
+      - PUID=2005
       - PGID=4321
     network_mode: container:tunnel-mango
     volumes:
@@ -75,13 +86,13 @@ services:
   
   rtorrent:
     image: crazymax/rtorrent-rutorrent:latest
+    restart: unless-stopped
     volumes:
      - sharebear-volume:/media
      - rtorrent-data-volume:/data
-    restart: unless-stopped
     environment:
      - TZ=America/Los_Angeles
-     - PUID=1025
+     - PUID=2006
      - PGID=4321
     ulimits:
       nproc: 65535
@@ -97,14 +108,12 @@ services:
     restart: unless-stopped
     environment:
       - TZ=America/Los_Angeles
-      - PUID=1025
-      - PGID=4321
     read_only: true
     tmpfs:
       - /var/run
       - /var/cache/nginx
     volumes:
-      - $PWD/internal-proxy.conf:/etc/nginx/conf.d/internal-proxy.conf:ro # can't define a single file below
+      - $PWD/vpn-proxy.conf:/etc/nginx/conf.d/vpn-proxy.conf:ro # can't define a single file in the volumes section below
       - comm-volume:/comm
     network_mode: container:tunnel-mango
     depends_on:
@@ -122,7 +131,7 @@ services:
       - /var/run
       - /var/cache/nginx
     volumes:
-      - $PWD/external-proxy.conf:/etc/nginx/conf.d/external-proxy.conf:ro
+      - $PWD/aggregator-proxy.conf:/etc/nginx/conf.d/aggregator-proxy.conf:ro # can't define a single file in the volumes section below
       - comm-volume:/comm
 
 volumes:
@@ -131,7 +140,7 @@ volumes:
         type: tmpfs
         device: tmpfs
   sharebear-volume: # this is the downloads & media volume - change this to a persistent volume
-    # external: true # setting up this volume manually outside of docker-compose is recommended
+    # external: true # recommend setting up this volume manually outside of docker-compose
     driver_opts:
         type: tmpfs
         device: tmpfs
