@@ -1,6 +1,10 @@
 # compose-downloadsquad
 
-a multi-container docker application to run an automated download pod, aptly named downloadsquad
+a multi-container docker application to run an automated download pod, aptly named downloadsquad.
+
+features:
+1. unix domain sockets for secure & efficient communicate around the VPN, without having to use the hacky docker links approach
+1. all containers accessible from a single port
 
 ## how to set it up
 1. clone this repo
