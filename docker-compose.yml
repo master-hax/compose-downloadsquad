@@ -11,7 +11,7 @@ services:
       - SYS_MODULE
     volumes:
       - /lib/modules:/lib/modules
-      - wgclient-data-volume:/config
+      - wireguard-data-volume:/config
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
       - net.ipv6.conf.all.disable_ipv6=0 # for raspberry pi compatibility?
