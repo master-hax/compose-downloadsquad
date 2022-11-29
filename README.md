@@ -15,7 +15,7 @@ features:
 the web UIs of all containers is accessible at port 80, depending on what hostname is passed in the HTTP request.
 add the following to your hosts file to access the web UI easily (using the IP address of your docker host):
 ```
-127.0.0.1 rtorrent.downloadsquad.local sonarr.downloadsquad.local lidarr.downloadsquad.local readarr.downloadsquad.local radarr.downloadsquad.local prowlarr.downloadsquad.local 
+127.0.0.1 rtorrent.downloadsquad sonarr.downloadsquad lidarr.downloadsquad readarr.downloadsquad radarr.downloadsquad prowlarr.downloadsquad 
 ```
 
 note:
