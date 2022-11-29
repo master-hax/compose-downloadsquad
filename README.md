@@ -13,14 +13,40 @@ features:
 
 ## how to use it
 the web UIs of all containers is accessible at port 80, depending on what hostname is passed in the HTTP request.
-add the following to your hosts file to access the web UI easily (using the IP address of your docker host):
+add the following line to your hosts file to access the web UI easily (using the IP address of your docker host):
 ```
 127.0.0.1 rtorrent.downloadsquad sonarr.downloadsquad lidarr.downloadsquad readarr.downloadsquad radarr.downloadsquad prowlarr.downloadsquad 
 ```
+then you can visit the following in your browser:
+* [http://rtorrent.downloadsquad](http://rtorrent.downloadsquad) 
+* [http://prowlarr.downloadsquad](http://rtorrent.downloadsquad) 
+* [http://lidarr.downloadsquad](http://rtorrent.downloadsquad) 
+* [http://radarr.downloadsquad](http://rtorrent.downloadsquad) 
+* [http://readarr.downloadsquad](http://rtorrent.downloadsquad) 
+* [http://sonarr.downloadsquad](http://rtorrent.downloadsquad) 
+
+give it 30 seconds or so for the nginx proxies to start up & make sure you are using http (no s)
 
 note:
 * rtorrent & prowlarr are visble to containers outside the VPN as "aggregator-proxy"
 * containers outside the VPN are visible to rtorrent & prowlarr as "localhost"
+
+note:
+* this project runs out of the box but make sure you change the volumes to persistent ones if you want to use it long term
+
+note:
+* make sure to test that prowlarr & rtorrent are behind the VPN by running
+```
+docker exec -it compose-downloadsquad-rtorrent-1 curl api.ipify.org
+```
+&
+```
+docker exec -it compose-downloadsquad-prowlarr-1 curl api.ipify.org
+```
+* and optionally test to make sure e.g. sonarr is not behind the VPN
+```
+docker exec -it compose-downloadsquad-sonarr-1 curl api.ipify.org
+```
 
 ## how it works
 we only want to pass `rtorrent` & `prowlarr` through the VPN, but they still need to communicate with containers outside the VPN. So we use [unix domain sockets](https://en.wikipedia.org/wiki/Unix_domain_socket) on a temporary docker volume for secure & efficient communication around the VPN + 2 instances of nginx to proxy requests through them.
