@@ -3,7 +3,7 @@ services:
 
   vpn-tunnel:
     image: lscr.io/linuxserver/wireguard # alternatively, use "qmcgaw/gluetun" or "dperson/openvpn-client"
-    container_name: tunnel-mango
+    container_name: tunnel-mango         # it does not even have to be defined in this compose file
     restart: unless-stopped
     # remove the stuff below here if you are not using wireguard
     cap_add:
