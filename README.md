@@ -38,6 +38,9 @@ note:
 * containers outside the VPN are visible to rtorrent & prowlarr as "localhost"
 
 note:
+* you will likely want to set up port forwarding on the VPN tunnel container for rtorrent
+
+note:
 * this project runs out of the box but make sure you change the volumes to persistent ones if you want to use it long term
 
 note:
