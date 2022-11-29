@@ -18,12 +18,18 @@ add the following line to your hosts file to access the web UI easily (using the
 127.0.0.1 rtorrent.downloadsquad sonarr.downloadsquad lidarr.downloadsquad readarr.downloadsquad radarr.downloadsquad prowlarr.downloadsquad 
 ```
 then you can visit the following in your browser:
-* [http://rtorrent.downloadsquad](http://rtorrent.downloadsquad) 
-* [http://prowlarr.downloadsquad](http://rtorrent.downloadsquad) 
-* [http://lidarr.downloadsquad](http://rtorrent.downloadsquad) 
-* [http://radarr.downloadsquad](http://rtorrent.downloadsquad) 
-* [http://readarr.downloadsquad](http://rtorrent.downloadsquad) 
-* [http://sonarr.downloadsquad](http://rtorrent.downloadsquad) 
+* [http://rtorrent.downloadsquad](http://rtorrent.downloadsquad)
+  * ([crazy-max/docker-rtorrent-rutorrent](https://github.com/crazy-max/docker-rtorrent-rutorrent))
+* [http://prowlarr.downloadsquad](http://rtorrent.downloadsquad)
+  * ([linuxserver/docker-prowlarr](https://github.com/linuxserver/docker-prowlarr))
+* [http://lidarr.downloadsquad](http://rtorrent.downloadsquad)
+  * ([linuxserver/docker-lidarr](https://github.com/linuxserver/docker-lidarr))
+* [http://radarr.downloadsquad](http://rtorrent.downloadsquad)
+  * ([linuxserver/docker-radarr](https://github.com/linuxserver/docker-radarr))
+* [http://readarr.downloadsquad](http://rtorrent.downloadsquad)
+  * ([linuxserver/docker-readarr](https://github.com/linuxserver/docker-readarr))
+* [http://sonarr.downloadsquad](http://rtorrent.downloadsquad)
+  * ([linuxserver/docker-sonarr](https://github.com/linuxserver/docker-sonarr))
 
 give it 30 seconds or so for the nginx proxies to start up & make sure you are using http (no s)
 
@@ -47,6 +53,9 @@ docker exec -it compose-downloadsquad-prowlarr-1 curl api.ipify.org
 ```
 docker exec -it compose-downloadsquad-sonarr-1 curl api.ipify.org
 ```
+
+optional:
+* consider locking the docker image versions to specific versions rather than "latest" for supply chain security/consistency.
 
 ## how it works
 we only want to pass `rtorrent` & `prowlarr` through the VPN, but they still need to communicate with containers outside the VPN. So we use [unix domain sockets](https://en.wikipedia.org/wiki/Unix_domain_socket) on a temporary docker volume for secure & efficient communication around the VPN + 2 instances of nginx to proxy requests through them.
