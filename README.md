@@ -2,13 +2,22 @@
 
 a multi-container docker application to run an automated download pod, aptly named downloadsquad.
 
+contains the following:
+1. wireguard ([docker-wireguard](https://github.com/linuxserver/docker-wireguard)) but any VPN tunnel can be used like [qdm12/gluetun](https://github.com/qdm12/gluetun) or [dperson/openvpn-client](https://github.com/dperson/openvpn-client)
+1. rtorrent behind the VPN container ([crazy-max/docker-rtorrent-rutorrent](https://github.com/crazy-max/docker-rtorrent-rutorrent))
+1. prowlarr behind the VPN container ([linuxserver/docker-prowlarr](https://github.com/linuxserver/docker-prowlarr))
+1. radarr ([linuxserver/docker-radarr](https://github.com/linuxserver/docker-radarr))
+1. lidarr (https://github.com/linuxserver/docker-lidarr))/github.com/linuxserver/docker-prowlarr))
+1. sonarr ([linuxserver/docker-sonarr](https://github.com/linuxserver/docker-sonarr))
+1. readarr ([linuxserver/docker-readarr](https://github.com/linuxserver/docker-readarr))
+
 features:
 1. unix domain sockets for secure & efficient communicate around the VPN, without having to use the hacky docker links approach
 1. all containers accessible from a single port
 
 ## how to set it up
 1. clone this repo
-1. put your wg0.conf file into ./wireguard (or use a different tunnel entirely. works with [qdm12/gluetun](https://github.com/qdm12/gluetun), [dperson/openvpn-client](https://github.com/dperson/openvpn-client), etc.)
+1. configure the VPN tunnel (wg0.conf into ./wireguard or use a different tunnel entirely)
 1. run docker-compose up
 
 ## how to use it
@@ -19,17 +28,11 @@ add the following line to your hosts file to access the web UI easily (using the
 ```
 then you can visit the following in your browser:
 * [http://rtorrent.downloadsquad](http://rtorrent.downloadsquad)
-  * ([crazy-max/docker-rtorrent-rutorrent](https://github.com/crazy-max/docker-rtorrent-rutorrent))
 * [http://prowlarr.downloadsquad](http://rtorrent.downloadsquad)
-  * ([linuxserver/docker-prowlarr](https://github.com/linuxserver/docker-prowlarr))
-* [http://lidarr.downloadsquad](http://rtorrent.downloadsquad)
-  * ([linuxserver/docker-lidarr](https://github.com/linuxserver/docker-lidarr))
 * [http://radarr.downloadsquad](http://rtorrent.downloadsquad)
-  * ([linuxserver/docker-radarr](https://github.com/linuxserver/docker-radarr))
-* [http://readarr.downloadsquad](http://rtorrent.downloadsquad)
-  * ([linuxserver/docker-readarr](https://github.com/linuxserver/docker-readarr))
+* [http://lidarr.downloadsquad](http://rtorrent.downloadsquad)
 * [http://sonarr.downloadsquad](http://rtorrent.downloadsquad)
-  * ([linuxserver/docker-sonarr](https://github.com/linuxserver/docker-sonarr))
+* [http://readarr.downloadsquad](http://rtorrent.downloadsquad)
 
 give it 30 seconds or so for the nginx proxies to start up & make sure you are using http (no s)
 
