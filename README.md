@@ -3,7 +3,7 @@
 a multi-container docker application to run an automated download pod, aptly named downloadsquad.
 
 contains the following in a single compose file:
-1. wireguard ([docker-wireguard](https://github.com/linuxserver/docker-wireguard)) but any VPN tunnel can be used like [qdm12/gluetun](https://github.com/qdm12/gluetun) or [dperson/openvpn-client](https://github.com/dperson/openvpn-client)
+1. wireguard ([linuxserver/docker-wireguard](https://github.com/linuxserver/docker-wireguard)) but any VPN tunnel can be used like [qdm12/gluetun](https://github.com/qdm12/gluetun) or [dperson/openvpn-client](https://github.com/dperson/openvpn-client)
 1. rtorrent behind the VPN container ([crazy-max/docker-rtorrent-rutorrent](https://github.com/crazy-max/docker-rtorrent-rutorrent))
 1. prowlarr behind the VPN container ([linuxserver/docker-prowlarr](https://github.com/linuxserver/docker-prowlarr))
 1. radarr ([linuxserver/docker-radarr](https://github.com/linuxserver/docker-radarr))
