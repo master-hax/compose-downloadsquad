@@ -20,7 +20,7 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     restart: unless-stopped
     volumes:
-      - sharebear-volume:/media
+      - sharebear-volume:/sharebear
       - radarr-data-volume:/config
       - comm-volume:/comm
     environment:
@@ -34,7 +34,7 @@ services:
     image: lscr.io/linuxserver/lidarr:latest
     restart: unless-stopped
     volumes:
-      - sharebear-volume:/media
+      - sharebear-volume:/sharebear
       - lidarr-data-volume:/config
       - comm-volume:/comm
     environment:
@@ -48,7 +48,7 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     restart: unless-stopped
     volumes:
-      - sharebear-volume:/media
+      - sharebear-volume:/sharebear
       - sonarr-data-volume:/config
       - comm-volume:/comm
     environment:
@@ -62,7 +62,7 @@ services:
     image: lscr.io/linuxserver/readarr:develop
     restart: unless-stopped
     volumes:
-      - sharebear-volume:/media
+      - sharebear-volume:/sharebear
       - readarr-data-volume:/config
       - comm-volume:/comm
     environment:
@@ -89,7 +89,7 @@ services:
     image: crazymax/rtorrent-rutorrent:latest
     restart: unless-stopped
     volumes:
-     - sharebear-volume:/media
+     - sharebear-volume:/sharebear
      - rtorrent-data-volume:/data
     environment:
      - TZ=America/Los_Angeles
