@@ -13,7 +13,7 @@ contains the following in a single compose file:
 
 features:
 1. unix domain sockets for secure & efficient communicate around the VPN, without having to use the hacky docker links approach
-1. all containers accessible from a single port
+1. all containers accessible from a single port, without having to use URL redirects
 
 ## how to set it up
 1. clone this repo
