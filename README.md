@@ -46,7 +46,7 @@ individual service can be accessed at the following URLs:
 * [http://sonarr.downloadsquad](http://rtorrent.downloadsquad)
 * [http://readarr.downloadsquad](http://rtorrent.downloadsquad)
 
-give it 30 seconds or so for the nginx proxies to start up &
+give it 30 seconds or so for the individual services to start up
 
 notes:
 * all containers are visible to each other as "localhost"
