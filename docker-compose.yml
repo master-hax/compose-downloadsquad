@@ -53,7 +53,6 @@ services:
     volumes:
       - sharebear-volume:/sharebear
       - radarr-data-volume:/config
-      - comm-volume:/comm
     environment:
       - TZ=America/Los_Angeles
       - PUID=2001
@@ -68,7 +67,6 @@ services:
     volumes:
       - sharebear-volume:/sharebear
       - lidarr-data-volume:/config
-      - comm-volume:/comm
     environment:
       - TZ=America/Los_Angeles
       - PUID=2002
@@ -83,7 +81,6 @@ services:
     volumes:
       - sharebear-volume:/sharebear
       - sonarr-data-volume:/config
-      - comm-volume:/comm
     environment:
       - TZ=America/Los_Angeles
       - PUID=2003
@@ -98,7 +95,6 @@ services:
     volumes:
       - sharebear-volume:/sharebear
       - readarr-data-volume:/config
-      - comm-volume:/comm
     environment:
       - TZ=America/Los_Angeles
       - PUID=2004
