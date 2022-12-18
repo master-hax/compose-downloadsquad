@@ -26,7 +26,10 @@ add the following line to your hosts file to access the web UI easily (using the
 ```
 127.0.0.1 rtorrent.downloadsquad sonarr.downloadsquad lidarr.downloadsquad readarr.downloadsquad radarr.downloadsquad prowlarr.downloadsquad 
 ```
-then you can visit the following in your browser:
+then you can visit the following in your browser to access the service status page:
+* [http://downloadsquad](http://downloadsquad) (or [http://downloadsquad.](http://downloadsquad.) if you are on Windows, notice the dot)
+
+individual service can be accessed at the following URLs:
 * [http://rtorrent.downloadsquad](http://rtorrent.downloadsquad)
 * [http://prowlarr.downloadsquad](http://rtorrent.downloadsquad)
 * [http://radarr.downloadsquad](http://rtorrent.downloadsquad)
