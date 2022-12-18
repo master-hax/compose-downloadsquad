@@ -45,6 +45,9 @@ services:
       - /var/cache/nginx
     volumes:
       - $PWD/aggregator-proxy.conf:/etc/nginx/conf.d/aggregator-proxy.conf:ro # can't define a single file in the volumes section below
+      - $PWD/index.html:/etc/nginx/html/index.html:ro # can't define a single file in the volumes section below
+      - $PWD/favicon.svg:/etc/nginx/html/favicon.svg:ro # can't define a single file in the volumes section below
+      - $PWD/favicon.ico:/etc/nginx/html/favicon.ico:ro # can't define a single file in the volumes section below
       - comm-volume:/comm
 
   radarr:
