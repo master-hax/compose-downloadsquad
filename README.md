@@ -53,18 +53,8 @@ notes:
 * make sure you are using http (no s)
 * you will likely want to set up port forwarding on the VPN tunnel container for rtorrent if not using Wireguard
 * this project runs out of the box but make sure you change the volumes to persistent ones if you want to use it long term
-* make sure to test that prowlarr & rtorrent are behind the VPN by running
-```
-docker exec -it compose-downloadsquad-rtorrent-1 curl api.ipify.org
-```
-&
-```
-docker exec -it compose-downloadsquad-prowlarr-1 curl api.ipify.org
-```
-* and optionally test to make sure e.g. sonarr is not behind the VPN
-```
-docker exec -it compose-downloadsquad-sonarr-1 curl api.ipify.org
-```
+* make sure to test that prowlarr & rtorrent are behind the VPN by running `docker exec -it compose-downloadsquad-rtorrent-1 curl api.ipify.org` & `docker exec -it compose-downloadsquad-prowlarr-1 curl api.ipify.org`
+* test to make sure e.g. sonarr is not behind the VPN `docker exec -it compose-downloadsquad-sonarr-1 curl api.ipify.org`
 
 optional:
 * consider locking the docker image versions to specific versions rather than "latest" for supply chain security/consistency.
