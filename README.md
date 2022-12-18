@@ -2,6 +2,13 @@
 
 a multi-container docker application to run an automated download pod, aptly named downloadsquad.
 
+dark mode:
+![dark mode](https://user-images.githubusercontent.com/17506434/208304052-1cab39f4-25ec-481b-a663-aaa4a36c1924.png)
+
+light mode:
+![light mode](https://user-images.githubusercontent.com/17506434/208304089-6e341050-ef42-440b-9875-53fc4773e0e6.png)
+
+
 contains the following in a single compose file:
 1. wireguard ([linuxserver/docker-wireguard](https://github.com/linuxserver/docker-wireguard)) but any VPN tunnel can be used like [qdm12/gluetun](https://github.com/qdm12/gluetun) or [dperson/openvpn-client](https://github.com/dperson/openvpn-client)
 1. rtorrent behind the VPN container ([crazy-max/docker-rtorrent-rutorrent](https://github.com/crazy-max/docker-rtorrent-rutorrent))
@@ -14,6 +21,8 @@ contains the following in a single compose file:
 features:
 1. unix domain sockets for secure & efficient communicate around the VPN, without having to use the hacky docker links approach
 1. all containers accessible from a single port, without having to use URL redirects
+1. simple web UI with status indicators & dark mode support 
+
 
 ## how to set it up
 1. clone this repo
