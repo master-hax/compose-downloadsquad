@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8">
+  <title>downloadsquad</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <style>
+    body {
+      /* padding: 0; */
+      text-align: center;
+      word-wrap: normal;
+      font-family: "Verdana", sans-serif;
+    }
+
+    h1 {
+      font-size: 3em;
+    }
+
+    img {
+      height: 1em;
+    }
+
+    ul {
+      /* padding: 2em; */
+      margin-left: 2em;
+      margin-right: 2em;
+      font-size: 2.5em;
+      /* width: auto; */
+      list-style: none;
+    }
+
+    li {
+      padding: 0.25em;
+      /* padding-bottom: 0.5em; */
+      /* flex-shrink: 2; */
+      display: inline-block;
+      margin-bottom: 1em;
+      margin-right: 1em;
+      /* margin-left: 1em; */
+      width: 15em;
+      height: 2.5em;
+      border-style: solid;
+      border-width: medium;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    li>a {
+      color: inherit;
+      /* margin: auto; */
+      /* width: 50%; */
+      /* border: 3px solid green; */
+      /* padding: 1em; */
+    }
+
+    .service-status {
+      font-size: 0.75em;
+    }
+
+    .healthy {
+      color: green;
+    }
+
+    .unhealthy {
+      color: red;
+    }
+
+    /* styles for the leading icon */
+    .loader {
+      width: 0.5em;
+      height: 0.5em;
+      border: 2px solid #FFF;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* stuff for the refresh button */
+    .button-6 {
+      align-items: center;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: .25rem;
+      box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+      box-sizing: border-box;
+      cursor: pointer;
+      display: inline-flex;
+      font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      justify-content: center;
+      line-height: 1.25;
+      margin: 0;
+      min-height: 3rem;
+      padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+      position: relative;
+      text-decoration: none;
+      transition: all 250ms;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      vertical-align: baseline;
+      width: auto;
+    }
+
+    .button-6:active {
+      transform: translateY(0);
+    }
+  </style>
+  <script>
+    "use strict";
+    const serviceList = ["rtorrent", "prowlarr", "radarr", "lidarr", "sonarr", "readarr"];
+    async function refreshServiceStatus(serviceName) {
+      let statusElement = document.getElementById(serviceName + "-status")
+      statusElement.textContent = ""
+      let loadingElement = document.createElement('span');
+      loadingElement.classList.add("loader");
+      statusElement.appendChild(loadingElement);
+      window.fetch("http://" + serviceName + ".downloadsquad", {
+        redirect: "error"
+      }).then(response => {
+        if (response.ok) {
+          statusElement.textContent = "healthy"
+          statusElement.classList.remove("unhealthy")
+          statusElement.classList.add("healthy")
+        } else {
+          statusElement.textContent = "unhealthy (" + response.status + ")"
+          statusElement.classList.remove("healthy")
+          statusElement.classList.add("unhealthy")
+        }
+      }).catch(err => {
+        console.error(err)
+        statusElement.textContent = "unreachable"
+        statusElement.classList.remove("healthy")
+        statusElement.classList.remove("unhealthy")
+      });
+    }
+    function refreshAllServices() {
+      serviceList.forEach(refreshServiceStatus);
+    }
+    window.onload = () => refreshAllServices();
+  </script>
+  <body>
+    <h1>welcome to downloadsquad </h1>
+    <button class="button-6" onClick="refreshAllServices();">refresh service status</button>
+    <ul>
+      <li>
+        <a href="http://rtorrent.downloadsquad">rtorrent</a>
+        <br>
+        <div class="service-status">status: <span id="rtorrent-status">
+            <span class="loader"></span>
+          </span>
+        </div>
+      </li>
+      <li>
+        <a href="http://prowlarr.downloadsquad">prowlarr</a>
+        <br>
+        <div class="service-status">status: <span id="prowlarr-status">
+            <span class="loader"></span>
+          </span>
+        </div>
+      </li>
+      <li>
+        <a href="http://radarr.downloadsquad">radarr</a>
+        <br>
+        <div class="service-status">status: <span id="radarr-status">
+            <span class="loader"></span>
+          </span>
+        </div>
+      </li>
+      <li>
+        <a href="http://lidarr.downloadsquad">lidarr</a>
+        <br>
+        <div class="service-status">status: <span id="lidarr-status">
+            <span class="loader"></span>
+          </span>
+        </div>
+      </li>
+      <li>
+        <a href="http://sonarr.downloadsquad">sonarr</a>
+        <br>
+        <div class="service-status">status: <span id="sonarr-status">
+            <span class="loader"></span>
+          </span>
+        </div>
+      </li>
+      <li>
+        <a href="http://readarr.downloadsquad">readarr</a>
+        <br>
+        <div class="service-status">status: <span id="readarr-status">
+            <span class="loader"></span>
+          </span>
+        </div>
+      </li>
+    </ul>
+    <footer> view the repository on <a href="https://github.com/master-hax/compose-downloadsquad">github</a> | created with ❤️ by <a href="https://master-hax.com">master-hax</a>
+    </footer>
+  </body>
+</html>
