@@ -41,7 +41,7 @@ note:
 * containers outside the VPN are visible to rtorrent & prowlarr as "localhost"
 
 note:
-* you will likely want to set up port forwarding on the VPN tunnel container for rtorrent
+* you will likely want to set up port forwarding on the VPN tunnel container for rtorrent if not using Wireguard
 
 note:
 * this project runs out of the box but make sure you change the volumes to persistent ones if you want to use it long term
@@ -65,3 +65,9 @@ optional:
 
 ## how it works
 we only want to pass `rtorrent` & `prowlarr` through the VPN, but they still need to communicate with containers outside the VPN. So we use [unix domain sockets](https://en.wikipedia.org/wiki/Unix_domain_socket) on a temporary docker volume for secure & efficient communication around the VPN + 2 instances of nginx to proxy requests through them.
+
+## related projects
+
+[master-hax/compose-wireguard-ipfs](https://github.com/master-hax/compose-wireguard-ipfs) - a similar project for IPFS instead of bittorrent
+
+[master-hax/uds-proxy-mod](https://github.com/master-hax/uds-proxy-mod) - an s6 based docker mod to proxy requests through unix domain sockets
