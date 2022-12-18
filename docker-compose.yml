@@ -16,6 +16,37 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
       - net.ipv6.conf.all.disable_ipv6=0 # for raspberry pi compatibility?
 
+  vpn-proxy:
+    image: nginx:stable
+    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+    read_only: true
+    tmpfs:
+      - /var/run
+      - /var/cache/nginx
+    volumes:
+      - $PWD/vpn-proxy.conf:/etc/nginx/conf.d/vpn-proxy.conf:ro # can't define a single file in the volumes section below
+      - comm-volume:/comm
+    network_mode: container:tunnel-mango
+    depends_on:
+      - container:tunnel-mango
+
+  aggregator-proxy:
+    image: nginx:stable
+    restart: unless-stopped
+    environment:
+      TZ: America/Los_Angeles
+    read_only: true
+    ports:
+      - 80:80/tcp
+    tmpfs:
+      - /var/run
+      - /var/cache/nginx
+    volumes:
+      - $PWD/aggregator-proxy.conf:/etc/nginx/conf.d/aggregator-proxy.conf:ro # can't define a single file in the volumes section below
+      - comm-volume:/comm
+
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     restart: unless-stopped
@@ -27,8 +58,9 @@ services:
       - TZ=America/Los_Angeles
       - PUID=2001
       - PGID=4321
-      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
-      - UDS_PROXY_HOST_radarr=localhost:7878
+    network_mode: service:aggregator-proxy
+    depends_on:
+      - service:aggregator-proxy
 
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
@@ -41,8 +73,9 @@ services:
       - TZ=America/Los_Angeles
       - PUID=2002
       - PGID=4321
-      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
-      - UDS_PROXY_HOST_lidarr=localhost:8686
+    network_mode: service:aggregator-proxy
+    depends_on:
+      - service:aggregator-proxy
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -55,8 +88,9 @@ services:
       - TZ=America/Los_Angeles
       - PUID=2003
       - PGID=4321
-      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
-      - UDS_PROXY_HOST_sonarr=localhost:8989
+    network_mode: service:aggregator-proxy
+    depends_on:
+      - service:aggregator-proxy
 
   readarr:
     image: lscr.io/linuxserver/readarr:develop
@@ -69,8 +103,9 @@ services:
       - TZ=America/Los_Angeles
       - PUID=2004
       - PGID=4321
-      - DOCKER_MODS=ghcr.io/master-hax/uds-proxy-mod:latest
-      - UDS_PROXY_HOST_readarrr=localhost:8787
+    network_mode: service:aggregator-proxy
+    depends_on:
+      - service:aggregator-proxy
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
@@ -103,37 +138,6 @@ services:
     network_mode: container:tunnel-mango
     depends_on:
       - container:tunnel-mango
-
-  vpn-proxy:
-    image: nginx:stable
-    restart: unless-stopped
-    environment:
-      - TZ=America/Los_Angeles
-    read_only: true
-    tmpfs:
-      - /var/run
-      - /var/cache/nginx
-    volumes:
-      - $PWD/vpn-proxy.conf:/etc/nginx/conf.d/vpn-proxy.conf:ro # can't define a single file in the volumes section below
-      - comm-volume:/comm
-    network_mode: container:tunnel-mango
-    depends_on:
-      - container:tunnel-mango
-
-  aggregator-proxy:
-    image: nginx:stable
-    restart: unless-stopped
-    environment:
-      TZ: America/Los_Angeles
-    read_only: true
-    ports:
-      - 80:80/tcp
-    tmpfs:
-      - /var/run
-      - /var/cache/nginx
-    volumes:
-      - $PWD/aggregator-proxy.conf:/etc/nginx/conf.d/aggregator-proxy.conf:ro # can't define a single file in the volumes section below
-      - comm-volume:/comm
 
 volumes:
   comm-volume: # leave this as tmpfs in RAM - it is for container to container communication
