@@ -37,8 +37,7 @@ then you can visit the following in your browser:
 give it 30 seconds or so for the nginx proxies to start up & make sure you are using http (no s)
 
 note:
-* rtorrent & prowlarr are visble to containers outside the VPN as "aggregator-proxy"
-* containers outside the VPN are visible to rtorrent & prowlarr as "localhost"
+* all containers are visible to each other as "localhost"
 
 note:
 * you will likely want to set up port forwarding on the VPN tunnel container for rtorrent if not using Wireguard
