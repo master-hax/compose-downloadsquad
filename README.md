@@ -24,10 +24,10 @@ features:
 the web UIs of all containers is accessible at port 80, depending on what hostname is passed in the HTTP request.
 add the following line to your hosts file to access the web UI easily (using the IP address of your docker host):
 ```
-127.0.0.1 rtorrent.downloadsquad sonarr.downloadsquad lidarr.downloadsquad readarr.downloadsquad radarr.downloadsquad prowlarr.downloadsquad 
+127.0.0.1 downloadsquad rtorrent.downloadsquad sonarr.downloadsquad lidarr.downloadsquad readarr.downloadsquad radarr.downloadsquad prowlarr.downloadsquad 
 ```
 then you can visit the following in your browser to access the service status page:
-* [http://downloadsquad](http://downloadsquad) (or [http://downloadsquad.](http://downloadsquad.) if you are on Windows, notice the dot)
+* [http://downloadsquad](http://downloadsquad) (or [http://downloadsquad.](http://downloadsquad.) if you are on Windows, note the trailing dot)
 
 individual service can be accessed at the following URLs:
 * [http://rtorrent.downloadsquad](http://rtorrent.downloadsquad)
@@ -37,18 +37,13 @@ individual service can be accessed at the following URLs:
 * [http://sonarr.downloadsquad](http://rtorrent.downloadsquad)
 * [http://readarr.downloadsquad](http://rtorrent.downloadsquad)
 
-give it 30 seconds or so for the nginx proxies to start up & make sure you are using http (no s)
+give it 30 seconds or so for the nginx proxies to start up &
 
-note:
+notes:
 * all containers are visible to each other as "localhost"
-
-note:
+* make sure you are using http (no s)
 * you will likely want to set up port forwarding on the VPN tunnel container for rtorrent if not using Wireguard
-
-note:
 * this project runs out of the box but make sure you change the volumes to persistent ones if you want to use it long term
-
-note:
 * make sure to test that prowlarr & rtorrent are behind the VPN by running
 ```
 docker exec -it compose-downloadsquad-rtorrent-1 curl api.ipify.org
