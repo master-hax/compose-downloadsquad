@@ -45,10 +45,8 @@ services:
       - /var/cache/nginx
     volumes:
       - $PWD/aggregator-proxy.conf:/etc/nginx/conf.d/aggregator-proxy.conf:ro # can't define a single file in the volumes section below
-      - $PWD/index.html:/etc/nginx/html/index.html:ro # can't define a single file in the volumes section below
-      - $PWD/favicon.svg:/etc/nginx/html/favicon.svg:ro # can't define a single file in the volumes section below
-      - $PWD/favicon.ico:/etc/nginx/html/favicon.ico:ro # can't define a single file in the volumes section below
       - comm-volume:/comm
+      - homepage-volume:/etc/nginx/html
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -143,6 +141,12 @@ volumes:
     driver_opts:
         type: tmpfs
         device: tmpfs
+  homepage-volume: # this contains the HTML files for the status page
+    driver: local
+    driver_opts:
+        o: bind,ro
+        type: none
+        device: "$PWD/html"
   sharebear-volume: # this is the downloads & media volume - change this to a persistent volume
     # external: true # recommend setting up this volume manually outside of docker-compose
     driver_opts:
