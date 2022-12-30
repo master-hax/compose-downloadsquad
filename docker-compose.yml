@@ -2,7 +2,7 @@ version: "3.7"
 services:
 
   vpn-tunnel:
-    image: lscr.io/linuxserver/wireguard # alternatively, use "qmcgaw/gluetun" or "dperson/openvpn-client"
+    image: linuxserver/wireguard:latest # alternatively, use "qmcgaw/gluetun" or "dperson/openvpn-client"
     container_name: tunnel-mango         # it does not even have to be defined in this compose file
     restart: unless-stopped
     # remove the stuff below here if you are not using wireguard
@@ -49,7 +49,7 @@ services:
       - homepage-volume:/etc/nginx/html
 
   radarr:
-    image: lscr.io/linuxserver/radarr:latest
+    image: linuxserver/radarr:latest
     restart: unless-stopped
     volumes:
       - sharebear-volume:/sharebear
@@ -63,7 +63,7 @@ services:
       - service:aggregator-proxy
 
   lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
+    image: linuxserver/lidarr:latest
     restart: unless-stopped
     volumes:
       - sharebear-volume:/sharebear
@@ -77,7 +77,7 @@ services:
       - service:aggregator-proxy
 
   sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
+    image: linuxserver/sonarr:latest
     restart: unless-stopped
     volumes:
       - sharebear-volume:/sharebear
@@ -91,7 +91,7 @@ services:
       - service:aggregator-proxy
 
   readarr:
-    image: lscr.io/linuxserver/readarr:develop
+    image: linuxserver/readarr:develop
     restart: unless-stopped
     volumes:
       - sharebear-volume:/sharebear
@@ -105,7 +105,7 @@ services:
       - service:aggregator-proxy
 
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:develop
+    image: linuxserver/prowlarr:develop
     restart: unless-stopped
     environment:
       - TZ=America/Los_Angeles
