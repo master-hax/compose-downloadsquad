@@ -62,6 +62,8 @@ optional:
 ## how it works
 we only want to pass `rtorrent` & `prowlarr` through the VPN, but they still need to communicate with containers outside the VPN. So we use [unix domain sockets](https://en.wikipedia.org/wiki/Unix_domain_socket) on a temporary docker volume for secure & efficient communication around the VPN + 2 instances of nginx to proxy requests through them.
 
+the security of this project has not been verified. please do not use it for anything important without double-checking it yourself.
+
 ## related projects
 
 [master-hax/compose-wireguard-ipfs](https://github.com/master-hax/compose-wireguard-ipfs) - a similar project for IPFS instead of bittorrent
