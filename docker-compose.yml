@@ -1,21 +1,6 @@
 version: "3.7"
 services:
 
-  vpn-tunnel:
-    image: linuxserver/wireguard:latest # alternatively, use "qmcgaw/gluetun" or "dperson/openvpn-client"
-    container_name: tunnel-mango         # it does not even have to be defined in this compose file
-    restart: unless-stopped
-    # remove the stuff below here if you are not using wireguard
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    volumes:
-      - /lib/modules:/lib/modules
-      - wireguard-data-volume:/config
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
-      - net.ipv6.conf.all.disable_ipv6=0 # for raspberry pi compatibility?
-
   vpn-proxy:
     image: nginx:stable
     restart: unless-stopped
